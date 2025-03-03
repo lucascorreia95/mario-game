@@ -13,6 +13,7 @@ const keys = {
     pressed: false,
   },
 };
+let scrollOffset = 0;
 
 class Player {
   constructor() {
@@ -85,13 +86,19 @@ function animate() {
   } else {
     player.velocity.x = 0;
 
-    platforms.forEach((platform) => {
-      if (keys.right.pressed) {
+    if (keys.right.pressed) {
+      scrollOffset += 5;
+
+      platforms.forEach((platform) => {
         platform.position.x -= 5;
-      } else if (keys.left.pressed) {
+      });
+    } else if (keys.left.pressed) {
+      scrollOffset -= 5;
+
+      platforms.forEach((platform) => {
         platform.position.x += 5;
-      }
-    });
+      });
+    }
   }
 
   platforms.forEach((platform) => {
@@ -105,6 +112,10 @@ function animate() {
       player.velocity.y = 0;
     }
   });
+
+  if (scrollOffset > 2000) {
+    console.log("you win!");
+  }
 }
 
 animate();
