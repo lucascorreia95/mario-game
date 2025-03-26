@@ -191,13 +191,16 @@ var Player = /*#__PURE__*/function () {
       this.position.y += this.velocity.y;
       if (this.position.y + this.height + this.velocity.y <= canvas.height) {
         this.velocity.y += gravity;
-      } else {
-        this.velocity.y = 0;
       }
     }
   }]);
   return Player;
 }();
+function createImage(imageSrc) {
+  var image = new Image();
+  image.src = imageSrc;
+  return image;
+}
 var Platform = /*#__PURE__*/function () {
   function Platform(_ref) {
     var x = _ref.x,
@@ -242,11 +245,6 @@ var GenericObject = /*#__PURE__*/function () {
   }]);
   return GenericObject;
 }();
-function createImage(imageSrc) {
-  var image = new Image();
-  image.src = imageSrc;
-  return image;
-}
 var platformImage = createImage(_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
 var player = new Player();
 var platforms = [new Platform({
@@ -255,6 +253,10 @@ var platforms = [new Platform({
   image: platformImage
 }), new Platform({
   x: platformImage.width - 3,
+  y: 470,
+  image: platformImage
+}), new Platform({
+  x: platformImage.width * 2 + 100,
   y: 470,
   image: platformImage
 })];
@@ -267,6 +269,32 @@ var genericObjects = [new GenericObject({
   y: -1,
   image: createImage(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
 })];
+function init() {
+  scrollOffset = 0;
+  player = new Player();
+  platforms = [new Platform({
+    x: -1,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width - 3,
+    y: 470,
+    image: platformImage
+  }), new Platform({
+    x: platformImage.width * 2 + 100,
+    y: 470,
+    image: platformImage
+  })];
+  genericObjects = [new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_img_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+  }), new GenericObject({
+    x: -1,
+    y: -1,
+    image: createImage(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"])
+  })];
+}
 function animate() {
   window.requestAnimationFrame(animate);
   c.fillStyle = "white";
@@ -309,6 +337,9 @@ function animate() {
   });
   if (scrollOffset > 2000) {
     console.log("you win!");
+  }
+  if (player.position.y > canvas.height) {
+    init();
   }
 }
 animate();

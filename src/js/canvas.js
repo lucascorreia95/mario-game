@@ -45,10 +45,14 @@ class Player {
 
     if (this.position.y + this.height + this.velocity.y <= canvas.height) {
       this.velocity.y += gravity;
-    } else {
-      this.velocity.y = 0;
     }
   }
+}
+
+function createImage(imageSrc) {
+  const image = new Image();
+  image.src = imageSrc;
+  return image;
 }
 
 class Platform {
@@ -83,20 +87,19 @@ class GenericObject {
   }
 }
 
-function createImage(imageSrc) {
-  const image = new Image();
-  image.src = imageSrc;
-  return image;
-}
-
 const platformImage = createImage(platform);
 
-const player = new Player();
-const platforms = [
+let player = new Player();
+let platforms = [
   new Platform({ x: -1, y: 470, image: platformImage }),
   new Platform({ x: platformImage.width - 3, y: 470, image: platformImage }),
+  new Platform({
+    x: platformImage.width * 2 + 100,
+    y: 470,
+    image: platformImage,
+  }),
 ];
-const genericObjects = [
+let genericObjects = [
   new GenericObject({
     x: -1,
     y: -1,
@@ -108,6 +111,35 @@ const genericObjects = [
     image: createImage(hills),
   }),
 ];
+
+function init() {
+  scrollOffset = 0;
+
+  player = new Player();
+
+  platforms = [
+    new Platform({ x: -1, y: 470, image: platformImage }),
+    new Platform({ x: platformImage.width - 3, y: 470, image: platformImage }),
+    new Platform({
+      x: platformImage.width * 2 + 100,
+      y: 470,
+      image: platformImage,
+    }),
+  ];
+
+  genericObjects = [
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(background),
+    }),
+    new GenericObject({
+      x: -1,
+      y: -1,
+      image: createImage(hills),
+    }),
+  ];
+}
 
 function animate() {
   window.requestAnimationFrame(animate);
@@ -167,6 +199,10 @@ function animate() {
 
   if (scrollOffset > 2000) {
     console.log("you win!");
+  }
+
+  if (player.position.y > canvas.height) {
+    init();
   }
 }
 
